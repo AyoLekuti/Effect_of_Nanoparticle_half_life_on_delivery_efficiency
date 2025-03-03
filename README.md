@@ -4,7 +4,6 @@ Repository for all code regarding the paper "The effect of nanoparticle half-lif
 
 The Constrained model python file:
 - calculates half-life from experimental data using the two-compartment model.
-- the model constrains the y0 (%ID/g) = 100,
--   based on the assumption at t = 0 mins, 100% of the injected dose is in the blood.
+- the model constrains the y0 (%ID/g) = 100, based on the assumption at t = 0 mins, 100% of the injected dose is in the blood.
 
 All python processing was performed in an Anaconda environment.
