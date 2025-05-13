@@ -1,0 +1,80 @@
+clc; clear; close all;
+% ------------------------
+% Parameters
+% ------------------------
+entry_points = 5; % Number of entry points on the cell
+cell_radius = 20; % Radius of the cell
+nanoparticle_count = 200; % Total number of nanoparticles
+k = 0.05; % Sigmoid rate constant
+x0 = 100; % Midpoint for sigmoid curve
+particle_counts = 0:10:500; % Concentration range
+% ------------------------
+% Sigmoid Uptake Curve
+% ------------------------
+L = entry_points; % Max uptake = number of entry points
+entered_counts = L ./ (1 + exp(-k * (particle_counts - x0)));
+% ------------------------
+% Cell Visualization
+% ------------------------
+figure;
+hold on;
+% Draw cell membrane
+theta = linspace(0, 2*pi, 100);
+x_cell = cell_radius * cos(theta);
+y_cell = cell_radius * sin(theta);
+plot(x_cell, y_cell, 'k-', 'LineWidth', 2); % Cell boundary
+% Mark entry points (equally spaced on the perimeter)
+entry_angles = linspace(0, 2*pi, entry_points + 1);
+entry_x = cell_radius * cos(entry_angles);
+entry_y = cell_radius * sin(entry_angles);
+plot(entry_x, entry_y, 'ro', 'MarkerFaceColor', 'r'); % Entry points
+% ------------------------
+% Nanoparticles
+% ------------------------
+% Random positions around the cell (but not overlapping)
+nanoparticle_x = (rand(1, nanoparticle_count) * 2 - 1) * (cell_radius * 3);
+nanoparticle_y = (rand(1, nanoparticle_count) * 2 - 1) * (cell_radius * 3);
+% Filter out nanoparticles that are inside the cell
+dist_to_cell = sqrt(nanoparticle_x.^2 + nanoparticle_y.^2);
+valid_idx = dist_to_cell > cell_radius; % Only keep those outside the cell
+% Plot valid nanoparticles
+plot(nanoparticle_x(valid_idx), nanoparticle_y(valid_idx), 'bo', 'MarkerFaceColor', 'b');
+% ------------------------
+% Plot Settings
+% ------------------------
+axis equal;
+xlim([-cell_radius * 3, cell_radius * 3]);
+ylim([-cell_radius * 3, cell_radius * 3]);
+xlabel('X (arbitrary units)', 'FontSize', 12);
+ylabel('Y (arbitrary units)', 'FontSize', 12);
+title('Visualization of Cell and Nanoparticles with Entry Points', 'FontSize', 14);
+grid on;
+hold off;
+% ------------------------
+% Display uptake values
+% ------------------------
+disp('First few uptake values for different concentrations:');
+disp(table(particle_counts', entered_counts', ...
+
+'VariableNames', {'Concentration', 'Nanoparticles_Entered'}));
+% Parameters
+entry_points = 5; % Maximum number of nanoparticles that can enter
+k = 0.05; % Rate constant
+x0 = 100; % Midpoint
+particle_counts = 0:10:500; % Nanoparticle "concentration"
+L = entry_points; % Max uptake
+% Calculate sigmoid uptake
+entered_counts = L ./ (1 + exp(-k * (particle_counts - x0)));
+% Plot sigmoid uptake curve
+figure;
+plot(particle_counts, entered_counts, 'b-', 'LineWidth', 2);
+xlabel('Nanoparticle Concentration', 'FontSize', 12);
+ylabel('Nanoparticles Entered Cell', 'FontSize', 12);
+title('Sigmoid Uptake Curve of Nanoparticles', 'FontSize', 14);
+xlim([0, max(particle_counts)]);
+ylim([0, L + 1]);
+grid on;
+% Optional: Display the first few values
+disp('Uptake curve (first few values):');
+disp(table(particle_counts(1:10)', entered_counts(1:10)', ...
+'VariableNames', {'Concentration', 'Nanoparticles_Entered'}));
